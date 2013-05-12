@@ -13,8 +13,8 @@
     "component/map": "*",
     "pgherveou/store": "*",
     "guille/ms.js": "*",
-    "chaijs-chai": "*"
   },
+  
   "development": {
     "chaijs/chai": "*",
     "chaijs/chai-spies": "*"
