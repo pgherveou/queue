@@ -59,27 +59,27 @@ an error or complete event is triggered
 
 ## Task Api
 
-### online()
+### .online()
 
 check that navigator is online before attempting to process job
 
-### interval(time)
+### .interval(time)
 
 define the interval between two retries (default is '2sec')
 
-### retry(n)
+### .retry(n)
 
 define max number of retries
 
-### timeout(time)
+### .timeout(time)
 
 define timeout for a task
 
-### lifetime(time)
+### .lifetime(time)
 
 job expires if its exceed crationtime + time
 
-### action(function(job, done))
+### .action(function(job, done))
 
 action to execute receive a job and a callback
 
