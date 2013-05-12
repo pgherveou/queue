@@ -9,6 +9,8 @@ module.exports = Task;
 /**
  * create a new task
  * @param {String} name
+ *
+ * @api private
  */
 
 function Task(name) {
@@ -34,7 +36,8 @@ Task.prototype.process = function(job) {
 
   if (this._online && !navigator.onLine) {
     job.emit('offline');
-    return replay(job);
+    replay(job);
+    return;
   }
 
   // set job retry
