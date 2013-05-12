@@ -1,0 +1,28 @@
+{
+  "name": "queue",
+  "repo": "pgherveou/queue",
+  "description": "task queue backed by localstorgae for the browser",
+  "version": "0.0.1",
+  "keywords": [
+    "job",
+    "task",
+    "queue"
+  ],
+  "dependencies": {
+    "component/emitter": "*",
+    "component/map": "*",
+    "pgherveou/store": "*",
+    "guille/ms.js": "*",
+    "chaijs-chai": "*"
+  },
+  "development": {
+    "chaijs/chai": "*",
+    "chaijs/chai-spies": "*"
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": [
+    "index.js",
+    "task.js"
+  ]
+}
