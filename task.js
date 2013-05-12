@@ -29,8 +29,7 @@ function Task(name) {
 
 Task.prototype.process = function(job) {
   var self = this
-    , timeout
-    , next;
+    , timeout;
 
   if (!job.active) return;
 
@@ -135,6 +134,7 @@ Task.prototype.retry = function(retry) {
 
 /**
  * set online flag, defines wether or not the task can be executed offline
+ * @return {Task}
  *
  * @api public
  */
