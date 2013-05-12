@@ -23,7 +23,7 @@ queue
 	.retry(5) // retry up to 5 times
 	.timeout('10ms') // task fail if it last more than 10ms
 	.lifetime('5m') // stop retrying if job is more than 5min old
-	.action(function(done) {
+	.action(function(job, done) {
 		// do some work here
 		done(err); // pass an error to the callback if task failed
 	});
