@@ -41,41 +41,47 @@ job = queue
 
 ### require("queue")
 
-  get the default queue instance
+get the default queue instance
 
 ### .createQueue(id)
 
-	create a new queue with specific id
-	localstorage keys will be prefixed with queue<id>
+create a new queue with specific id
+localstorage keys will be prefixed with queue id
 
 ### .define(name)
 
-	create a new Task with name
+create a new Task with name
 
-### .on(['error', 'complete'], function(job) {})
+### .on([error complete], function(job) {})
 
-	Queue is an event emitter, whenever a job fails or complete
-	error or complete events are called with job as argument
+Queue is an event emitter, whenever a job fail or complete
+an error or complete event is triggered
 
 ## Task Api
 
 ### online()
-	check that navigator is online before attempting to process job
+
+check that navigator is online before attempting to process job
 
 ### interval(time)
-	define an interval between two retries (default is '2sec')
+
+define the interval between two retries (default is '2sec')
 
 ### retry(n)
-	define max number of retries
+
+define max number of retries
 
 ### timeout(time)
-	define timeout for a task
+
+define timeout for a task
 
 ### lifetime(time)
-	job expires if its exceed crationtime + time
+
+job expires if its exceed crationtime + time
 
 ### action(function(job, done))
-	action to execute receive a job and a callback
+
+action to execute receive a job and a callback
 
 ## License
 
