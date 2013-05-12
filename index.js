@@ -33,7 +33,7 @@ function Queue(id) {
   this.jobs = [];
 
   // persistent store
-  this.store = store.prefix('queue', (id || ''));
+  this.store = store.prefix('queue' + (id || ''));
 }
 
 /**

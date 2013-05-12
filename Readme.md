@@ -21,7 +21,8 @@ queue
 	.online() // check that navigator is online before attempting to process job
 	.interval('10s') // attempt to replay a failed job every 10sec (default is 2sec)
 	.retry(5) // retry up to 5 times
-	.lifetime('5m') // up to 5min to complete a task
+	.timeout('10ms') // task fail if it last more than 10ms
+	.lifetime('5m') // stop retrying if job is more than 5min old
 	.action(function(done) {
 		// do some work here
 		done(err); // pass an error to the callback if task failed
@@ -36,9 +37,45 @@ job = queue
 
 ```
 
-## API
+## Queue API
 
+### require("queue")
 
+  get the default queue instance
+
+### .createQueue(id)
+
+	create a new queue with specific id
+	localstorage keys will be prefixed with queue<id>
+
+### .define(name)
+
+	create a new Task with name
+
+### .on(['error', 'complete'], function(job) {})
+
+	Queue is an event emitter, whenever a job fails or complete
+	error or complete events are called with job as argument
+
+## Task Api
+
+### online()
+	check that navigator is online before attempting to process job
+
+### interval(time)
+	define an interval between two retries (default is '2sec')
+
+### retry(n)
+	define max number of retries
+
+### timeout(time)
+	define timeout for a task
+
+### lifetime(time)
+	job expires if its exceed crationtime + time
+
+### action(function(job, done))
+	action to execute receive a job and a callback
 
 ## License
 
