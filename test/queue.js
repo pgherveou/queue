@@ -17,7 +17,7 @@ describe('Queue specs', function() {
     queue.destroy();
   });
 
-  it('should process job', function(done) {
+  it('should trigger complete event when a job completes successfuly', function(done) {
     queue
       .define('test-task')
       .action(function (job, cb) {cb();});
@@ -25,6 +25,20 @@ describe('Queue specs', function() {
     job = queue.create('test-task');
 
     queue.on('complete', function () {
+      expect(queue.store.get()).to.have.length(0);
+      expect(queue.store.get(job.id)).to.not.be.ok;
+      done();
+    });
+  });
+
+  it('should trigger error when a job fails', function(done) {
+    queue
+      .define('test-task')
+      .action(function (job, cb) {cb('boom');});
+
+    job = queue.create('test-task');
+
+    queue.on('error', function () {
       expect(queue.store.get()).to.have.length(0);
       expect(queue.store.get(job.id)).to.not.be.ok;
       done();

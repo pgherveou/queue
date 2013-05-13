@@ -74,14 +74,11 @@ Queue.prototype.process = function(job) {
         if (state) self.emit(state, job);
       };
 
-  if (job.active) return;
-
   if (!task) {
     remove();
     throw new Error("unknown " + job.type);
   }
 
-  job.active = true;
   job.on('complete', function () {remove('complete');});
   job.on('error', function () {remove('error');});
   task.process(job);
@@ -94,11 +91,12 @@ Queue.prototype.process = function(job) {
  */
 
 Queue.prototype.start = function() {
-  // load existing jobs
-  var ids = this.store.get() || []
-    , checkedIds = []
+  var ids = this.store.get()
     , job, jobId, i;
 
+  if(!ids) return;
+
+  // load existing jobs
   for (i = 0; i < ids.length; i++) {
     jobId = ids[i];
     job = this.store.get(jobId);
@@ -106,13 +104,7 @@ Queue.prototype.start = function() {
     if (job) {
       Emitter(job);
       this.jobs.push(job);
-      checkedIds.push(jobId);
     }
-  }
-
-  // update stored list if ever we found some missing jobs
-  if (checkedIds.length !== ids.length) {
-    this.store.save(checkedIds);
   }
 
   // process jobs

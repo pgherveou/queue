@@ -31,8 +31,6 @@ Task.prototype.process = function(job) {
   var self = this
     , timeout;
 
-  if (!job.active) return;
-
   if (this._online && !navigator.onLine) {
     job.emit('offline');
     replay(job);
