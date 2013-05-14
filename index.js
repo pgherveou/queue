@@ -42,17 +42,16 @@ function Queue(id) {
 
 Emitter(Queue.prototype);
 
-
 /**
  * define a new task
- * @param  {String}   type job type
- * @param  {Function} fn   job task
+ * @param  {String}   type task type
+ * @return {Task}
  *
  * @api public
  */
 
 Queue.prototype.tasks = {};
-Queue.prototype.define = function(type, fn) {
+Queue.prototype.define = function(type) {
   var task = new Task(type);
   this.tasks[type] = task;
   return task;
