@@ -1,4 +1,3 @@
-
 # queue
 
   task queue component for (mobile) browser backed by localstorage
@@ -49,7 +48,7 @@ get the default queue instance
 ### .createQueue(id)
 
 create a new queue with specific id
-localstorage keys will be prefixed with queue<id>
+localstorage keys will be prefixed with queue-[id]
 
 ### .define(name)
 
