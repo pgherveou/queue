@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Queue by pgherveou</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Queue</h1>
+        <p>task queue component for the browser backed by localstorage</p>
+
+        <p class="view"><a href="https://github.com/pgherveou/queue">View the Project on GitHub <small>pgherveou/queue</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/pgherveou/queue/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/pgherveou/queue/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/pgherveou/queue">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>queue</h1>
+
+<p>task queue component for (mobile) browser backed by localstorage</p>
+
+<h2>Installation</h2>
+
+<pre><code>$ component install pgherveou/queue
+</code></pre>
+
+<h2>Get started</h2>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">queue</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'queue'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">job</span><span class="p">)</span> <span class="p">{})</span> <span class="c1">// queue error handler</span>
+  <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'complete'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">job</span><span class="p">)</span> <span class="p">{});</span> <span class="c1">// queue success handler</span>
+
+<span class="c1">// define a new task</span>
+<span class="nx">queue</span>
+  <span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">'my-task'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">online</span><span class="p">()</span> <span class="c1">// check that navigator is online before attempting to process job</span>
+  <span class="p">.</span><span class="nx">interval</span><span class="p">(</span><span class="s1">'10s'</span><span class="p">)</span> <span class="c1">// replay a failed job every 10sec (default is 2sec)</span>
+  <span class="p">.</span><span class="nx">retry</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c1">// retry up to 5 times</span>
+  <span class="p">.</span><span class="nx">timeout</span><span class="p">(</span><span class="s1">'10ms'</span><span class="p">)</span> <span class="c1">// task fail if it lasts more than 10ms</span>
+  <span class="p">.</span><span class="nx">lifetime</span><span class="p">(</span><span class="s1">'5m'</span><span class="p">)</span> <span class="c1">// stop retrying if job is more than 5min old</span>
+  <span class="p">.</span><span class="nx">action</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">job</span><span class="p">,</span> <span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+    <span class="nx">done</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span> <span class="c1">// pass an error to the callback if task failed</span>
+  <span class="p">});</span>
+
+<span class="c1">// load and process jobs persisted in the localstorage</span>
+<span class="nx">queue</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+
+<span class="c1">// process a new job</span>
+<span class="nx">job</span> <span class="o">=</span> <span class="nx">queue</span>
+  <span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s1">'my-task'</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{})</span> <span class="c1">// job error handler</span>
+  <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'complete'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{})</span> <span class="c1">// job success handler</span>
+</pre></div>
+
+<h2>Queue API</h2>
+
+<h3>require("queue")</h3>
+
+<p>get the default queue instance</p>
+
+<h3>.createQueue(id)</h3>
+
+<p>create a new queue with specific id
+localstorage keys will be prefixed with queue</p>
+
+<h3>.define(name)</h3>
+
+<p>define a new Task with given name</p>
+
+<h3>.on([error complete], function(job) {})</h3>
+
+<p>Queue is an event emitter, whenever a job fail or complete
+an error or complete event is triggered</p>
+
+<h2>Task Api</h2>
+
+<h3>.online()</h3>
+
+<p>check that navigator is online before attempting to process job</p>
+
+<h3>.interval(time)</h3>
+
+<p>define the interval between two retries (default is '2sec')</p>
+
+<h3>.retry(n)</h3>
+
+<p>define max number of retries</p>
+
+<h3>.timeout(time)</h3>
+
+<p>define task timeout</p>
+
+<h3>.lifetime(time)</h3>
+
+<p>a job expires if it exceeds cration-time + time</p>
+
+<h3>.action(function(job, done))</h3>
+
+<p>action to execute receive a job and a callback</p>
+
+<h2>License</h2>
+
+<p>MIT</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/pgherveou">pgherveou</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
