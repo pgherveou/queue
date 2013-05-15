@@ -79,7 +79,7 @@ define task timeout
 
 ### .lifetime(time)
 
-a job expires if it exceeds cration-time + time
+a job expires if it exceeds creation-time + time
 
 ### .action(function(job, done))
 
