@@ -2,7 +2,7 @@
   "name": "queue",
   "repo": "pgherveou/queue",
   "description": "task queue backed by localstorgae for the browser",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "keywords": [
     "job",
     "task",
@@ -12,9 +12,9 @@
     "component/emitter": "*",
     "component/map": "*",
     "pgherveou/store": "*",
-    "guille/ms.js": "*"
+    "guille/ms.js": "*",
+    "store": "*"
   },
-  
   "development": {
     "chaijs/chai": "*",
     "chaijs/chai-spies": "*"
