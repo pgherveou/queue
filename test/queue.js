@@ -59,7 +59,6 @@ describe('Queue specs', function() {
     queue.store.save(['job-1']);
     queue.store.set('job-1', {type: 'test-task'});
     queue.start();
-
   });
 
   it('should retry a failed job', function(done) {
@@ -78,6 +77,9 @@ describe('Queue specs', function() {
 
     queue
       .create('test-task')
+      .on('error', function () {
+        done('job should not be in error');
+      })
       .on('complete', function () {
         expect(action).to.have.been.called.twice;
         done();
@@ -101,21 +103,57 @@ describe('Queue specs', function() {
       });
   });
 
-  it('should fail after lifetime expired', function(done) {
-    var action = function (job, cb) {cb('boom');};
-    action = chai.spy(action);
+  it('should succeed if lifetime has not expired', function(done) {
+    var action = function (job, cb) {
+      setTimeout(function() {cb();}, 10);
+    };
 
     queue
       .define('test-task')
-      .retry(Infinity)
-      .lifetime('10ms')
-      .interval('20ms')
+      .lifetime('20ms')
       .action(action);
 
     queue
       .create('test-task')
       .on('error', function () {
         done();
+      });
+  });
+
+  it('should fail after lifetime expired', function(done) {
+    var action = function (job, cb) {
+      setTimeout(function() {cb();}, 20);
+    };
+
+    queue
+      .define('test-task')
+      .lifetime('10ms')
+      .action(action);
+
+    queue
+      .create('test-task')
+      .on('error', function () {
+        done();
+      });
+  });
+
+  it('should succeed if last less than timeout', function(done) {
+    var action = function (job, cb) {
+      setTimeout(function() {cb();}, 10);
+    };
+
+    queue
+      .define('test-task')
+      .timeout('20ms')
+      .action(action);
+
+    queue
+      .create('test-task')
+      .on('complete', function () {
+        done();
+      })
+      .on('error', function () {
+        done('should not be in error');
       });
   });
 
@@ -138,6 +176,24 @@ describe('Queue specs', function() {
         done();
       });
   });
+
+  it('should delay job', function(done) {
+    var start = Date.now();
+     action = function (job, cb) {
+      var end = Date.now();
+      expect(end - start).to.be.at.least(20);
+      done();
+    };
+
+    queue
+      .define('test-task')
+      .delay('20ms')
+      .action(action);
+
+    queue.create('test-task');
+  });
+
+
 
 });
 

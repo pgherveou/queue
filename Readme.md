@@ -20,6 +20,7 @@ queue
   .online() // check that navigator is online before attempting to process job
   .interval('10s') // replay a failed job every 10sec (default is 2sec)
   .retry(5) // retry up to 5 times
+  .delay('5ms') // start task after a 5ms delay
   .timeout('10ms') // task fail if it lasts more than 10ms
   .lifetime('5m') // stop retrying if job is more than 5min old
   .action(function(job, done) {
@@ -76,6 +77,10 @@ define max number of retries
 ### .timeout(time)
 
 define task timeout
+
+### .timeout(time)
+
+define task delay
 
 ### .lifetime(time)
 

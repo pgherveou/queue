@@ -16,7 +16,6 @@ module.exports = Task;
 function Task(name) {
   this.name = name;
   this_interval = ms('2s');
-  this._lifetime = Infinity;
   this._retry = 0;
 }
 
@@ -29,7 +28,7 @@ function Task(name) {
 
 Task.prototype.process = function(job) {
   var self = this
-    , timeout;
+    , timeout, death, delay;
 
   if (this._online && !navigator.onLine) {
     job.emit('offline');
@@ -40,25 +39,43 @@ Task.prototype.process = function(job) {
   // set job retry
   job.retry = (job.retry || 0) + 1;
 
-  if (this._timeout) {
-    job.timeout = false;
-    timeout = setTimeout(function () {
-      job.timeout = true;
-      job.emit('timeout');
-      self.replay(job);
-    });
-  }
+  // get delay
+  delay = (this._delay && job.retry === 1) ? this._delay : 0;
 
- this._action(job, function(err) {
-    if (job.timeout) return;
-    clearTimeout(timeout);
-    if (err) {
-      job.emit('fail', err);
-      self.replay(job);
-    } else {
-      job.emit('complete');
+  setTimeout(function () {
+    // check timeout
+    if (self._timeout) {
+      job.timeout = false;
+      timeout = setTimeout(function () {
+        job.timeout = true;
+        job.emit('timeout');
+        self.replay(job);
+      }, self._timeout);
     }
-  });
+
+    // check lifetime
+    if (self._lifetime) {
+      job.death = false;
+      death = setTimeout(function () {
+        job.death = true;
+        job.emit('error');
+      }, self.timeToLive(job));
+    }
+
+    // start action
+    self._action(job, function(err) {
+      if (job.timeout || job.death) return;
+      clearTimeout(timeout);
+      clearTimeout(death);
+      if (err) {
+        job.emit('fail', err);
+        self.replay(job);
+      } else {
+        job.emit('complete');
+      }
+    });
+
+  }, delay);
 };
 
 /**
@@ -82,8 +99,7 @@ Task.prototype.action = function(action) {
 
 Task.prototype.replay = function(job) {
   var self = this
-    , canReplay = ((job.retry || 0) <= this._retry)
-               && (job.time + self._lifetime > new Date().getTime());
+    , canReplay = ((job.retry || 0) <= this._retry) && (this.timeToLive(job) > 0);
 
   if (canReplay)
     setTimeout(function() {self.process(job);}, this._interval);
@@ -115,6 +131,19 @@ Task.prototype.interval = function(interval) {
 Task.prototype.lifetime = function(lifetime) {
   this._lifetime = ms(lifetime);
   return this;
+};
+
+/**
+ * get time to live
+ * @param {Object} job
+ * @return {Number} time to live in ms
+ *
+ * @api private
+ */
+
+Task.prototype.timeToLive = function (job) {
+  if (!this._lifetime) return Infinity;
+  Math.max(0, job.time + self._lifetime - new Date().getTime());
 };
 
 /**
@@ -151,6 +180,19 @@ Task.prototype.online = function() {
  */
 
 Task.prototype.timeout = function(timeout) {
-  this._timeout = timeout;
+  this._timeout = ms(timeout);
+  return this;
+};
+
+/**
+ * set delay
+ * @param  {String} delay
+ * @return {Task}
+ *
+ * @api public
+ */
+
+Task.prototype.delay = function(delay) {
+  this._delay  = ms(delay);
   return this;
 };
