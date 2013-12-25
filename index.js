@@ -1,9 +1,8 @@
-var map = require('map')
-  , Emitter = require('emitter')
-  , ms = require('ms')
-  , store = require('store')
-  , Task = require('./task')
-  , noop = function() {};
+var map = require('map'),
+    Emitter = require('emitter'),
+    ms = require('ms'),
+    store = require('store'),
+    Task = require('./task');
 
 /**
  * expose new queue
@@ -29,6 +28,7 @@ function nextId() {
  */
 
 function Queue(id) {
+
   // memory store
   this.jobs = [];
 
@@ -65,17 +65,18 @@ Queue.prototype.define = function(type) {
  */
 
 Queue.prototype.process = function(job) {
-  var self = this
-    , task = this.tasks[job.type]
-    , remove = function (state) {
-        job.off();
-        self.remove(job.id);
-        if (state) self.emit(state, job);
-      };
+  var _this = this,
+      task = this.tasks[job.type];
+
+  function remove(state) {
+    job.off();
+    _this.remove(job.id);
+    if (state) _this.emit(state, job);
+  }
 
   if (!task) {
     remove();
-    throw new Error("unknown " + job.type);
+    throw new Error('unknown ' + job.type);
   }
 
   job.on('complete', function () {remove('complete');});
@@ -90,8 +91,8 @@ Queue.prototype.process = function(job) {
  */
 
 Queue.prototype.start = function() {
-  var ids = this.store.get()
-    , job, jobId, i;
+  var ids = this.store.get(),
+      job, jobId, i;
 
   if(!ids) return;
 
@@ -125,8 +126,8 @@ Queue.prototype.start = function() {
  */
 
 Queue.prototype.create = function(type, data) {
-  var self = this
-    , job = {
+  var _this = this,
+      job = {
         type: type,
         data: data,
         id: nextId(),
@@ -140,7 +141,7 @@ Queue.prototype.create = function(type, data) {
   Emitter(job);
 
   setTimeout(function() {
-    self.process(job);
+    _this.process(job);
   }, 0);
 
   return job;
@@ -154,8 +155,8 @@ Queue.prototype.create = function(type, data) {
  */
 
 Queue.prototype.remove = function(id) {
-  var ids = map(this.jobs, 'id')
-    , index = ids.indexOf(id);
+  var ids = map(this.jobs, 'id'),
+      index = ids.indexOf(id);
 
   if (!~index) return;
 

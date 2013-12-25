@@ -27,8 +27,8 @@ function Task(name) {
  */
 
 Task.prototype.process = function(job) {
-  var self = this
-    , timeout, death, delay;
+  var _this = this,
+      timeout, death, delay;
 
   if (this._online && !navigator.onLine) {
     job.emit('offline');
@@ -44,32 +44,32 @@ Task.prototype.process = function(job) {
 
   setTimeout(function () {
     // check timeout
-    if (self._timeout) {
+    if (_this._timeout) {
       job.timeout = false;
       timeout = setTimeout(function () {
         job.timeout = true;
         job.emit('timeout');
-        self.replay(job);
-      }, self._timeout);
+        _this.replay(job);
+      }, _this._timeout);
     }
 
     // check lifetime
-    if (self._lifetime) {
+    if (_this._lifetime) {
       job.death = false;
       death = setTimeout(function () {
         job.death = true;
         job.emit('error');
-      }, self.timeToLive(job));
+      }, _this.timeToLive(job));
     }
 
     // start action
-    self._action(job, function(err) {
+    _this._action(job, function(err) {
       if (job.timeout || job.death) return;
       clearTimeout(timeout);
       clearTimeout(death);
       if (err) {
         job.emit('fail', err);
-        self.replay(job);
+        _this.replay(job);
       } else {
         job.emit('complete');
       }
@@ -98,11 +98,12 @@ Task.prototype.action = function(action) {
  */
 
 Task.prototype.replay = function(job) {
-  var self = this
-    , canReplay = ((job.retry || 0) <= this._retry) && (this.timeToLive(job) > 0);
+  var _this = this,
+      canReplay = ((job.retry || 0) <= this._retry) &&
+                  (this.timeToLive(job) > 0);
 
   if (canReplay)
-    setTimeout(function() {self.process(job);}, this._interval);
+    setTimeout(function() {_this.process(job);}, this._interval);
   else
     job.emit('error');
 };
@@ -143,7 +144,7 @@ Task.prototype.lifetime = function(lifetime) {
 
 Task.prototype.timeToLive = function (job) {
   if (!this._lifetime) return Infinity;
-  Math.max(0, job.time + self._lifetime - new Date().getTime());
+  Math.max(0, job.time + this._lifetime - new Date().getTime());
 };
 
 /**
