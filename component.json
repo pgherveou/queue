@@ -2,7 +2,7 @@
   "name": "queue",
   "repo": "pgherveou/queue",
   "description": "task queue backed by localstorgae for the browser",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "keywords": [
     "job",
     "task",
