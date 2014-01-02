@@ -1,7 +1,7 @@
-var queue = require('queue')
-, chai = require('chai')
-, spies = require('chai-spies')
-, expect = chai.expect;
+var queue = require('queue'),
+    chai = require('chaijs-chai'),
+    spies = require('chaijs-chai-spies'),
+    expect = chai.expect;
 
 chai.use(spies);
 

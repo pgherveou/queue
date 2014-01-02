@@ -12,7 +12,7 @@
     "component/emitter": "*",
     "component/map": "*",
     "pgherveou/store": "*",
-    "guille/ms": "*"
+    "guille/ms.js": "*"
   },
   "development": {
     "chaijs/chai": "*",
