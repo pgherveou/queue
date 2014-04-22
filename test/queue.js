@@ -193,7 +193,5 @@ describe('Queue specs', function() {
     queue.create('test-task');
   });
 
-
-
 });
 
