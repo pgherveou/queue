@@ -1,4 +1,4 @@
-var ms = require('ms.js');
+var ms = require('ms');
 
 /**
  * expose Task
