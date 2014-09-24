@@ -1,6 +1,6 @@
 var map = require('map'),
     Emitter = require('emitter'),
-    ms = require('ms.js'),
+    ms = require('ms'),
     store = require('store'),
     Task = require('./task');
 
