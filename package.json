@@ -1,0 +1,23 @@
+{
+  "name": "queue",
+  "version": "0.0.7",
+  "description": "task queue backed by localstorgae for the browser",
+  "author": "PG Herveou",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/pgherveou/queue"
+  },
+  "bugs": {
+    "url": "https://github.com/pgherveou/queue/issues"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/pgherveou/queue",
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-shell": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-connect": "*",
+    "grunt-contrib-clean": "*"
+  }
+}
