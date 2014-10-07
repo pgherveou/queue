@@ -12,11 +12,11 @@
     "component/emitter": "*",
     "component/map": "*",
     "pgherveou/store": "*",
-    "guille/ms.js": "*"
+    "guille/ms.js": "0.6.1"
   },
   "development": {
     "chaijs/chai": "*",
-    "chaijs/chai-spies": "*"
+    "chaijs/chai-spies": "master"
   },
   "license": "MIT",
   "main": "index.js",
